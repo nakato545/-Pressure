@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>アイコン生成</title>
+<style>
+  body { font-family: sans-serif; padding: 24px; background: #f0f0f0; }
+  button { margin: 8px; padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 8px; border: none; background: #4a90e2; color: white; }
+  canvas { display: none; }
+  p { margin: 8px 0; color: #333; }
+</style>
+</head>
+<body>
+<h2>気圧ケア アイコン生成ツール</h2>
+<p>下のボタンを順番にクリックして、3つのファイルをダウンロードしてください。</p>
+<p>ダウンロードしたファイルをプロジェクトフォルダ（<strong>kiatsu-app</strong>）に置いてください。</p>
+<br>
+<button onclick="download(192, 'icon-192.png')">① icon-192.png をダウンロード</button><br>
+<button onclick="download(512, 'icon-512.png')">② icon-512.png をダウンロード</button><br>
+<button onclick="download(180, 'apple-touch-icon.png')">③ apple-touch-icon.png をダウンロード（iPhone用）</button>
+
+<canvas id="c"></canvas>
+
+<script>
+function download(size, filename) {
+  const canvas = document.getElementById('c');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  // 白背景
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, size, size, size * 0.22);
+  ctx.fill();
+
+  // 絵文字
+  ctx.font = `${size * 0.65}px sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🌀', size / 2, size / 2 + size * 0.03);
+
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = filename;
+  a.click();
+}
+</script>
+</body>
+</html>
