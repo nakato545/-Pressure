@@ -15,7 +15,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Inject API key
-        run: sed -i "s|__GEMINI_KEY__|${{ secrets.GEMINI_API_KEY }}|g" app.js
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python3 -c "
+import os
+with open('app.js', 'r', encoding='utf-8') as f:
+    content = f.read()
+key = os.environ['GEMINI_API_KEY']
+content = content.replace('__GEMINI_KEY__', key)
+with open('app.js', 'w', encoding='utf-8') as f:
+    f.write(content)
+print('Done')
+"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
