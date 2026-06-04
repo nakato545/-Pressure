@@ -17,17 +17,17 @@ jobs:
       - name: Inject API key
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python3 -c "
-import sys
-with open('app.js', 'r', encoding='utf-8') as f:
-    content = f.read()
-import os
-key = os.environ['GEMINI_API_KEY']
-content = content.replace('__GEMINI_KEY__', key)
-with open('app.js', 'w', encoding='utf-8') as f:
-    f.write(content)
-print('Done')
-"
+        run: |
+          python3 << 'PYEOF'
+          import os
+          with open('app.js', 'r', encoding='utf-8') as f:
+              content = f.read()
+          key = os.environ.get('GEMINI_API_KEY', '')
+          content = content.replace('__GEMINI_KEY__', key)
+          with open('app.js', 'w', encoding='utf-8') as f:
+              f.write(content)
+          print('Done')
+          PYEOF
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
